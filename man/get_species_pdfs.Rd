@@ -4,24 +4,37 @@
 \alias{get_species_pdfs}
 \title{Download all PDF recovery documents from NMFS}
 \usage{
-get_species_pdfs(subd = "")
+get_species_pdfs(url, subd = "")
 }
 \arguments{
+\item{url}{The URL to query for PDF links}
+
 \item{subd}{The directory (subdirectory) to which the PDFs are downloaded}
+}
+\value{
+An augmented data.frame from \link[pdfdown]{pdfdown} with:
+  \describe{
+    \item{url}{Document URL}
+    \item{dest}{Path to document}
+    \item{success}{One of Success, Failed, Pre-exist}
+    \item{pdfCheck}{TRUE if a real PDF, else FALSE}
+    \item{taxon}{The taxon represented, from the URL}
+  }
 }
 \description{
 Download all PDF recovery documents from NMFS
 }
 \details{
-Uses \link{get_plan_pdf_urls} to fetch the vector of PDF URLs for
-recovery plans maintained by the National Marine Fisheries Service (NMFS).
+Uses \link{get_species_pdf_urls} to fetch a vector of PDF URLs for
+species documents maintained by the National Marine Fisheries Service (NMFS).
 Filenames are the \link{basename} of the URL with spaces replaced by "_".
 Uses \link[pdfdown]{pdfdown}, which returns a data.frame of results, to
-do the scraping. Note that \link[pdfdown]{download_pdf} will not
+do the scraping.
 }
 \examples{
 \dontrun{
-dl_res <- get_species_pdfs("~/Downloads/NMFS_rec")
+  url <- "http://www.nmfs.noaa.gov/pr/species/turtles/green.html"
+  dl_res <- get_species_pdfs(url, "~/Downloads/NMFS_rec")
 }
 }
 

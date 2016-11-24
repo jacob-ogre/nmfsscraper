@@ -19,7 +19,8 @@ get_listings_page <- function() {
 #' \dontrun{
 #'    pg <- get_listings_page()
 #' }
-get_species_pages_links <- function(page) {
+get_species_pages_links <- function() {
+  page <- get_listings_page()
   cntr <- rvest::html_nodes(page, xpath = '//*[@id="center"]')
   atag <- rvest::html_nodes(cntr, "a")
   href <- rvest::html_attr(atag, "href")

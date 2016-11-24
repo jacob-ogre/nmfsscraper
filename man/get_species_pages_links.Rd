@@ -4,7 +4,7 @@
 \alias{get_species_pages_links}
 \title{Get URLs to NMFS's ESA species pages}
 \usage{
-get_species_pages_links(page)
+get_species_pages_links()
 }
 \description{
 Get URLs to NMFS's ESA species pages

@@ -3,7 +3,8 @@
 #' Function description; defaults to title if left blank
 #'
 #' @param url The URL to be queried for PDF links
-#' @importFrom  package function(s)
+#' @importFrom  xml2 read_html
+#' @importFrom  rvest html_nodes html_attr
 #' @export
 #' @examples
 #' \dontrun{
@@ -20,27 +21,45 @@ get_species_pdf_urls <- function(url) {
   pdfs <- ifelse(grepl(pdfs, pattern = "^http"),
                  pdfs,
                  paste0(domain, pdfs))
-  return(pdfs)
+  return(unique(pdfs))
 }
 
 #' Download all PDF recovery documents from NMFS
 #'
-#' @details Uses \link{get_plan_pdf_urls} to fetch the vector of PDF URLs for
-#' recovery plans maintained by the National Marine Fisheries Service (NMFS).
+#' @details Uses \link{get_species_pdf_urls} to fetch a vector of PDF URLs for
+#' species documents maintained by the National Marine Fisheries Service (NMFS).
 #' Filenames are the \link{basename} of the URL with spaces replaced by "_".
 #' Uses \link[pdfdown]{pdfdown}, which returns a data.frame of results, to
-#' do the scraping. Note that \link[pdfdown]{download_pdf} will not
+#' do the scraping.
 #'
+#' @param url The URL to query for PDF links
 #' @param subd The directory (subdirectory) to which the PDFs are downloaded
+#' @return An augmented data.frame from \link[pdfdown]{pdfdown} with:
+#'   \describe{
+#'     \item{url}{Document URL}
+#'     \item{dest}{Path to document}
+#'     \item{success}{One of Success, Failed, Pre-exist}
+#'     \item{pdfCheck}{TRUE if a real PDF, else FALSE}
+#'     \item{taxon}{The taxon represented, from the URL}
+#'   }
+#' @importFrom dplyr bind_rows
 #' @export
 #' @examples
 #' \dontrun{
-#' dl_res <- get_species_pdfs("~/Downloads/NMFS_rec")
+#'   url <- "http://www.nmfs.noaa.gov/pr/species/turtles/green.html"
+#'   dl_res <- get_species_pdfs(url, "~/Downloads/NMFS_rec")
 #' }
-get_species_pdfs <- function(subd = "") {
-  all_plan_pdfs <- get_species_pdf_urls()
-  res <- lapply(all_plan_pdfs, pdfdown::download_pdf, subd = subd)
+get_species_pdfs <- function(url, subd = "") {
+  all_species_pdfs <- get_species_pdf_urls(url)
+  res <- lapply(all_species_pdfs, pdfdown::download_pdf, subd = subd)
   res <- dplyr::bind_rows(res)
+  spp_pt <- strsplit(gsub(url,
+                          pattern = "\\.htm$|\\.html$",
+                          replacement = ""),
+                     split="/")
+  idx <- length(spp_pt[[1]])
+  spp <- paste(spp_pt[[1]][(idx-1):idx], collapse=":")
+  res$taxon <- rep(spp, length(res[[1]]))
   return(res)
 }
 
