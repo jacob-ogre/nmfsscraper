@@ -40,7 +40,7 @@ get_recovery_plan_urls_indirect <- function(page) {
   pdfs <- lapply(outl,
                  FUN = function(x) {
                    pg <- xml2::read_html(x)
-                   get_plan_urls_direct(pg, domain(x))
+                   get_recovery_plan_urls_direct(pg, domain(x))
                  }
           )
   return(unique(unlist(pdfs)))
