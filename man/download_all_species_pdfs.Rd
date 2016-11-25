@@ -4,7 +4,10 @@
 \alias{download_all_species_pdfs}
 \title{Download PDFs of documents linked on NMFS species pages}
 \usage{
-download_all_species_pdfs()
+download_all_species_pdfs(subd)
+}
+\arguments{
+\item{subd}{The directory (subdirectory) to which the PDFs are downloaded}
 }
 \description{
 Download PDFs of documents linked on NMFS species pages

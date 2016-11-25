@@ -70,15 +70,16 @@ download_species_pdfs <- function(url, subd = "") {
 #'   \url{http://www.nmfs.noaa.gov/pr/species/esa/listed.htm}. In general this
 #'   means recovery plans and many \emph{Federal Register} documents will not
 #'   be gathered.
+#' @param subd The directory (subdirectory) to which the PDFs are downloaded
 #' @importFrom dplyr bind_rows
 #' @export
 #' @examples
 #' \dontrun{
 #'   download_all_species_pdfs()
 #' }
-download_all_species_pdfs <- function() {
+download_all_species_pdfs <- function(subd) {
   urls <- get_species_pages_links()
-  res <- lapply(urls, download_species_pdfs)
+  res <- lapply(urls, download_species_pdfs, subd = subd)
   res <- dplyr::bind_rows(res)
   return(res)
 }
