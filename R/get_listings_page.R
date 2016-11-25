@@ -17,7 +17,7 @@ get_listings_page <- function() {
 #' @export
 #' @examples
 #' \dontrun{
-#'    pg <- get_listings_page()
+#'   pg <- get_listings_page()
 #' }
 get_species_pages_links <- function() {
   page <- get_listings_page()

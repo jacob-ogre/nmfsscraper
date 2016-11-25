@@ -11,7 +11,7 @@ Get URLs to NMFS's ESA species pages
 }
 \examples{
 \dontrun{
-   pg <- get_listings_page()
+  pg <- get_listings_page()
 }
 }
 

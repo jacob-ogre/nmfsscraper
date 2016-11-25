@@ -5,8 +5,13 @@ get_recovery_plans_page <- function() {
 }
 
 #' Return PDF urls linked directly to NMFS's main recovery page
-#' @export
-get_plan_urls_direct <- function(page, domain = "http://www.nmfs.noaa.gov") {
+#'
+#' @param page An \link[xml2]{read_html} page
+#' @param domain The base domain for pages, needed for relative URLs
+#'
+#' @importFrom xml2 read_html
+#' @importFrom rvest html_nodes html_attr
+get_recovery_plan_urls_direct <- function(page, domain = "http://www.nmfs.noaa.gov") {
   atag <- rvest::html_nodes(page, "a")
   href <- rvest::html_attr(atag, "href")
   pdfs <- href[grep(href, pattern = "pdf$|PDF$")]
@@ -17,8 +22,16 @@ get_plan_urls_direct <- function(page, domain = "http://www.nmfs.noaa.gov") {
 }
 
 #' Return PDF urls linked indirectly to NMFS's main recovery page
-#' @export
-get_plan_urls_indirect <- function(page) {
+#'
+#' @details While most species' recovery plans are linked directly to the main
+#' NMFS recovery page, some are hosted at regional offices or science centers.
+#' This function collects these non-central PDF URLs.
+#'
+#' @param page An \link[xml2]{read_html} page
+#'
+#' @importFrom xml2 read_html
+#' @importFrom rvest html_nodes html_attr
+get_recovery_plan_urls_indirect <- function(page) {
   domain <- function(x) paste(strsplit(x, "/")[[1]][1:3], collapse = "/")
   cntr <- rvest::html_nodes(page, xpath = '//*[@id="center"]')
   atag <- rvest::html_nodes(cntr, "a")
@@ -44,35 +57,35 @@ get_plan_urls_indirect <- function(page) {
 #' vector of all PDF URLs on the main recovery plan page as well as PDFs on
 #' pages linked from the main page. After getting this list, all of the PDFs
 #' can be downloaded using a custom scraper, with \link[pdfdown]{pdfdown}, or
-#' using \link{get_recovery_plans}.
+#' using \link{download_recovery_plans}.
 #'
 #' @return A vector of URLs for recovery plan PDFs
 #'
 #' @export
-get_plan_pdf_urls <- function() {
+get_recovery_plan_pdf_urls <- function() {
   pg <- get_recovery_plans_page()
-  direct <- get_plan_urls_direct(pg)
-  indirect <- get_plan_urls_indirect(pg)
+  direct <- get_recovery_plan_urls_direct(pg)
+  indirect <- get_recovery_plan_urls_indirect(pg)
   pdfs <- c(direct, indirect)
   return(pdfs)
 }
 
 #' Download all PDF recovery documents from NMFS
 #'
-#' @details Uses \link{get_plan_pdf_urls} to fetch the vector of PDF URLs for
-#' recovery plans maintained by the National Marine Fisheries Service (NMFS).
-#' Filenames are the \link{basename} of the URL with spaces replaced by "_".
-#' Uses \link[pdfdown]{pdfdown}, which returns a data.frame of results, to
+#' @details Uses \link{get_recovery_plan_pdf_urls} to fetch the vector of PDF
+#' URLs forrecovery plans maintained by the National Marine Fisheries Service
+#' (NMFS). Filenames are the \link{basename} of the URL with spaces replaced by
+#' "_". Uses \link[pdfdown]{pdfdown}, which returns a data.frame of results, to
 #' do the scraping. Note that \link[pdfdown]{download_pdf} will not
 #'
 #' @param subd The directory (subdirectory) to which the PDFs are downloaded
 #' @export
 #' @examples
 #' \dontrun{
-#' dl_res <- get_recovery_plans("~/Downloads/NMFS_rec")
+#' dl_res <- download_recovery_plans("~/Downloads/NMFS_rec")
 #' }
-get_recovery_plans <- function(subd = "") {
-  all_plan_pdfs <- get_plan_pdf_urls()
+download_recovery_plans <- function(subd = "") {
+  all_plan_pdfs <- get_recovery_plan_pdf_urls()
   res <- lapply(all_plan_pdfs, pdfdown::download_pdf, subd = subd)
   res <- dplyr::bind_rows(res)
   return(res)
