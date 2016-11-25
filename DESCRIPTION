@@ -19,3 +19,5 @@ Imports:
     pdfdown,
     rvest,
     xml2
+Remotes:
+    Defenders-ESC/pdfdown
