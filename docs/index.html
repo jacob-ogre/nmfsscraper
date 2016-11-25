@@ -47,7 +47,7 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"> </a>Usage</h2>
-<p>The functions in <code>nmfsscraper</code> each start with one of two verbs, <code>get</code> or <code>download</code>. The <code>get</code> functions return either an <code>xml2::read_html</code> object or a vector of URLs for scraping. For example,</p>
+<p>The functions in <code>nmfsscraper</code> each start with one of two verbs, <code>get</code> or <code>download</code>. The <code>get</code> functions return an <code>xml2::read_html</code> object, a data.frame, or a vector of URLs for scraping. For example,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">listings &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_listings_page.html">get_listings_page</a></span>()</code></pre></div>
 <p>returns the main <a href="http://www.nmfs.noaa.gov/pr/species/esa/listed.htm">NMFS listings page</a>, of which the main content is five tables with links to species&rsquo; documents.</p>
 <p>The <code>download</code> functions download PDFs of a given type to the user&rsquo;s choice of directory and return a data.frame with data about scraping success, e.g.,</p>

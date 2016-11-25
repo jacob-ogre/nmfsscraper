@@ -20,4 +20,11 @@ of) scrapers to search for PDFs on the NMFS website,
 analysis of the embedded information, e.g., using Natural Language Processing
 (NLP).
 }
+\note{
+\code{nmfsscraper} also includes a glossary of terms regularly used by
+NMFS, from a document that can be easily scraped from their website.
+The source site, \url{http://www.st.nmfs.noaa.gov/st4/documents/FishGlossary.pdf},
+required some manual adjustments, and is included so users can easily access
+the definitions but do not have to extract the glossary themselves.
+}
 
