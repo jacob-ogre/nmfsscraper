@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R: person("Defenders of Wildlife", "ESC", email = "esa@defenders.org",
                   role = c("aut", "cre"))
 Maintainer: Jacob Malcom <jmalcom@defenders.org>
-Description: To facilitate broad-scale analysis, official PDF documents can be
+Description: To facilitate textual analysis, official PDF documents can be
     scraped from the NMFS website. This package facilitates the scraping of 
     Endangered Species Act-related documents from the site.
 License: BSD_2_clause + file LICENSE
