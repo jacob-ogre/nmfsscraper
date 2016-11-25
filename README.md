@@ -25,8 +25,8 @@ devtools::install_github("jacob-ogre/nmfsscraper")
 ## Usage
 
 The functions in `nmfsscraper` each start with one of two verbs, `get` or 
-`download`. The `get` functions return either an `xml2::read_html` object or a
-vector of URLs for scraping. For example,
+`download`. The `get` functions return an `xml2::read_html` object, a data.frame, 
+or a vector of URLs for scraping. For example,
 
 ```r
 listings <- get_listings_page()

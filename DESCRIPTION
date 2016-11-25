@@ -10,6 +10,7 @@ Description: To facilitate broad-scale analysis, official PDF documents can be
     Endangered Species Act-related documents from the site.
 License: BSD_2_clause + file LICENSE
 Encoding: UTF-8
+Depends: R (>= 3.3.0)
 LazyData: true
 RoxygenNote: 5.0.1
 Imports:
