@@ -7,7 +7,7 @@ get_status_review_page <- function() {
 #' Return PDF urls linked directly to NMFS's main status reviews page
 #' @export
 get_status_review_pdf_urls <- function() {
-  domain <- paste(strsplit(url, "/")[[1]][1:3], collapse = "/")
+  domain <- "http://www.nmfs.noaa.gov"
   page <- get_status_review_page()
   cntr <- rvest::html_nodes(page, xpath = '//*[@id="center"]')
   atag <- rvest::html_nodes(cntr, "a")
