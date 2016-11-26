@@ -12,7 +12,9 @@
 #'    chemyd_pdfs <- get_species_pdf_urls(url)
 #' }
 get_species_pdf_urls <- function(url) {
-  domain <- paste(strsplit(url, "/")[[1]][1:3], collapse = "/")
+  domain <- try(paste(strsplit(url, "/")[[1]][1:3], collapse = "/"),
+                silent = TRUE)
+  if(class(domain) == "try-error") domain <- "http://www.nmfs.noaa.gov"
   url <- URLencode(url)
   page <- xml2::read_html(url)
   atag <- rvest::html_nodes(page, "a")
@@ -50,6 +52,7 @@ get_species_pdf_urls <- function(url) {
 #'   dl_res <- get_species_pdfs(url, "~/Downloads/NMFS_rec")
 #' }
 download_species_pdfs <- function(url, subd = "") {
+  message(paste("\t\tProcessing:", url))
   all_species_pdfs <- get_species_pdf_urls(url)
   res <- lapply(all_species_pdfs, pdfdown::download_pdf, subd = subd)
   res <- dplyr::bind_rows(res)
