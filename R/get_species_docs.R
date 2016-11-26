@@ -20,10 +20,14 @@ get_species_pdf_urls <- function(url) {
   atag <- rvest::html_nodes(page, "a")
   href <- rvest::html_attr(atag, "href")
   pdfs <- href[grep(href, pattern = "pdf$|PDF$")]
-  pdfs <- ifelse(grepl(pdfs, pattern = "^http"),
-                 pdfs,
-                 paste0(domain, pdfs))
-  return(unique(pdfs))
+  if(length(pdfs) > 0) {
+    pdfs <- ifelse(grepl(pdfs, pattern = "^http"),
+                   pdfs,
+                   paste0(domain, pdfs))
+    return(unique(pdfs))
+  } else {
+    return(NULL)
+  }
 }
 
 #' Download all PDF documents from NMFS for a species
@@ -54,16 +58,24 @@ get_species_pdf_urls <- function(url) {
 download_species_pdfs <- function(url, subd = "") {
   message(paste("\t\tProcessing:", url))
   all_species_pdfs <- get_species_pdf_urls(url)
-  res <- lapply(all_species_pdfs, pdfdown::download_pdf, subd = subd)
-  res <- dplyr::bind_rows(res)
-  spp_pt <- strsplit(gsub(url,
-                          pattern = "\\.htm$|\\.html$",
-                          replacement = ""),
-                     split="/")
-  idx <- length(spp_pt[[1]])
-  spp <- paste(spp_pt[[1]][(idx-1):idx], collapse=":")
-  res$taxon <- rep(spp, length(res[[1]]))
-  return(res)
+  if(!is.null(all_species_pdfs)) {
+    res <- lapply(all_species_pdfs, pdfdown::download_pdf, subd = subd)
+    res <- dplyr::bind_rows(res)
+    spp_pt <- strsplit(gsub(url,
+                            pattern = "\\.htm$|\\.html$",
+                            replacement = ""),
+                       split="/")
+    idx <- length(spp_pt[[1]])
+    spp <- paste(spp_pt[[1]][(idx-1):idx], collapse=":")
+    res$taxon <- rep(spp, length(res[[1]]))
+    return(res)
+  } else {
+    return(data.frame(url = url,
+                      dest = NA,
+                      success = "Failed",
+                      pdfCheck = NA,
+                      stringsAsFactors = FALSE))
+  }
 }
 
 #' Download PDFs of documents linked on NMFS species pages
