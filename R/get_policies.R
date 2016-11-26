@@ -1,14 +1,14 @@
-#' Return NMFS's main status review page as an xml2 object
+#' Return NMFS's main policies page as an xml2 object
 #'
-get_status_review_page <- function() {
-  page <- xml2::read_html("http://www.nmfs.noaa.gov/pr/listing/reviews.htm")
+get_policies_page <- function() {
+  page <- xml2::read_html("http://www.nmfs.noaa.gov/pr/laws/esa/policies.htm")
 }
 
-#' Return PDF urls linked directly to NMFS's main status reviews page
+#' Return PDF urls linked directly to NMFS's main policies page
 #' @export
-get_status_review_pdf_urls <- function() {
-  url <- "http://www.nmfs.noaa.gov"
-  page <- get_status_review_page()
+get_policies_pdf_urls <- function() {
+  domain <- "http://www.nmfs.noaa.gov"
+  page <- get_policies_page()
   cntr <- rvest::html_nodes(page, xpath = '//*[@id="center"]')
   atag <- rvest::html_nodes(cntr, "a")
   href <- rvest::html_attr(atag, "href")
@@ -19,10 +19,10 @@ get_status_review_pdf_urls <- function() {
   return(pdfs)
 }
 
-#' Download all PDF status review documents from NMFS
+#' Download all PDF policies documents from NMFS
 #'
 #' @details Uses \link{get_status_review_pdf_urls} to fetch the vector of PDF
-#' URLs for status reviews maintained by the National Marine Fisheries
+#' URLs for policies maintained by the National Marine Fisheries
 #' Service (NMFS). Filenames are the \link{basename} of the URL with spaces
 #' replaced by "_". Uses \link[pdfdown]{pdfdown}, which returns a data.frame of
 #' results, to do the scraping.
@@ -42,11 +42,11 @@ get_status_review_pdf_urls <- function() {
 #' @export
 #' @examples
 #' \dontrun{
-#'   dl_res <- download_status_reviews("~/Downloads/NMFS_rec")
+#'   dl_res <- download_policies("~/Downloads/NMFS_rec")
 #' }
-download_status_reviews <- function(subd = "") {
-  all_status_pdfs <- get_status_review_pdf_urls()
-  res <- lapply(all_status_pdfs, pdfdown::download_pdf, subd = subd)
+download_policies <- function(subd = "") {
+  all_policy_pdfs <- get_policies_pdf_urls()
+  res <- lapply(all_policy_pdfs, pdfdown::download_pdf, subd = subd)
   res <- dplyr::bind_rows(res)
   return(res)
 }
